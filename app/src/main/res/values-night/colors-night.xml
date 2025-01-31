@@ -1,0 +1,18 @@
+<resources>
+    <!-- Colores primarios y secundarios oscuros -->
+    <color name="colorPrimary">#BB86FC</color> <!-- Púrpura claro -->
+    <color name="colorPrimaryVariant">#3700B3</color>
+    <color name="colorSecondary">#03DAC6</color> <!-- Turquesa -->
+    <color name="colorSecondaryVariant">#018786</color>
+    <!-- Colores de fondo y superficie oscuros -->
+    <color name="colorBackground">#121212</color>
+    <color name="colorSurface">#121212</color>
+    <!-- Colores de error -->
+    <color name="colorError">#CF6679</color>
+    <!-- Colores en elementos -->
+    <color name="colorOnPrimary">#000000</color>
+    <color name="colorOnSecondary">#000000</color>
+    <color name="colorOnBackground">#FFFFFF</color>
+    <color name="colorOnSurface">#FFFFFF</color>
+    <color name="colorOnError">#000000</color>
+</resources>

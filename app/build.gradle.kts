@@ -74,4 +74,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+        implementation ("com.google.android.material:material:1.5.0")
+        implementation ("androidx.compose.material3:material3:1.0.0-alpha11") // Versión más reciente de Material 3
+
 }

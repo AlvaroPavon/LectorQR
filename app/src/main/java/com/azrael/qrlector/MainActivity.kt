@@ -6,24 +6,33 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
+import android.os.Build
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -34,12 +43,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.graphics.asImageBitmap
 import com.azrael.qrlector.network.QrCode
 import com.azrael.qrlector.network.RetrofitInstance
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
-
 import com.azrael.qrlector.ConfirmActionDialog
 
 class MainActivity : AppCompatActivity() {
@@ -55,6 +65,20 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     val context = LocalContext.current
+    val view = LocalView.current
+    val isDarkTheme = isSystemInDarkTheme()
+
+    // Establecer el color de la barra de notificaciones
+    SideEffect {
+        val window = (context as AppCompatActivity).window
+        window.statusBarColor = if (isDarkTheme) {
+            androidx.compose.ui.graphics.Color.Black.toArgb() // colorPrimary para tema oscuro
+        } else {
+            androidx.compose.ui.graphics.Color(0xFF6200EE).toArgb() // colorPrimary para tema claro
+        }
+        ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = !isDarkTheme
+    }
+
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
     var qrCode by remember { mutableStateOf("") }
     var qrBitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -93,19 +117,35 @@ fun MyApp() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 qrBitmap?.let {
-                    Image(
-                        bitmap = it.asImageBitmap(),
-                        contentDescription = "QR Code",
+                    Box(
                         modifier = Modifier
-                            .size(300.dp)  // Hacer el QR más grande
-                            .padding(16.dp)
+                            .size(300.dp) // Hacer el QR más grande
+                            .shadow(8.dp, RoundedCornerShape(16.dp))
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(
+                                Brush.linearGradient(
+                                    listOf(
+                                        MaterialTheme.colorScheme.primary,
+                                        MaterialTheme.colorScheme.secondary
+                                    )
+                                )
+                            )
                             .clickable(onClick = onQrCodeClick)
-                    )
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            bitmap = it.asImageBitmap(),
+                            contentDescription = "QR Code",
+                            modifier = Modifier.size(250.dp)
+                        )
+                    }
                     Text(
                         text = qrCode,
                         fontSize = 18.sp,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(8.dp)
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.padding(top = 16.dp)
                     )
                 }
 
@@ -118,7 +158,12 @@ fun MyApp() {
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary
                         ),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .shadow(4.dp, RoundedCornerShape(8.dp))
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.primary)
                     ) {
                         Text("Scan QR Code", fontSize = 18.sp)
                     }
@@ -132,7 +177,12 @@ fun MyApp() {
                                 containerColor = MaterialTheme.colorScheme.secondary,
                                 contentColor = MaterialTheme.colorScheme.onSecondary
                             ),
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .shadow(4.dp, RoundedCornerShape(8.dp))
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(MaterialTheme.colorScheme.secondary)
                         ) {
                             Text("Request Permission", fontSize = 16.sp)
                         }
@@ -140,14 +190,18 @@ fun MyApp() {
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Button(
                     onClick = { showDialog = true },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .shadow(4.dp, RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.primaryContainer)
                 ) {
                     Text("Ver QR Escaneados Anteriores", fontSize = 18.sp)
                 }
@@ -211,9 +265,11 @@ fun generateQrCodeBitmap(content: String): Bitmap? {
         val width = bitMatrix.width
         val height = bitMatrix.height
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+        val black = androidx.compose.ui.graphics.Color.Black.toArgb() // Convertir a Int
+        val white = androidx.compose.ui.graphics.Color.White.toArgb() // Convertir a Int
         for (x in 0 until width) {
             for (y in 0 until height) {
-                bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
+                bitmap.setPixel(x, y, if (bitMatrix[x, y]) black else white)
             }
         }
         bitmap
@@ -222,3 +278,4 @@ fun generateQrCodeBitmap(content: String): Bitmap? {
         null
     }
 }
+

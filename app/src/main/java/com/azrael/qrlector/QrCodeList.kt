@@ -14,6 +14,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.azrael.qrlector.network.QrApi
 import com.azrael.qrlector.network.QrCode
 import com.azrael.qrlector.network.RetrofitInstance
@@ -50,10 +52,10 @@ fun QrCodeList() {
                     selectedContent = qrCode.contenido
                     actionType = if (isValidUrl(qrCode.contenido)) "Abrir enlace" else "Copiar texto"
                     showAlert = true
-                }
+                },
+                style = androidx.compose.ui.text.TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
             )
-            Text(text = "Descripción: ${qrCode.descripcion}")
-        }
+            Text(text = "Descripción: ${qrCode.descripcion}", fontSize = 16.sp)        }
     }
 
     if (showAlert) {
