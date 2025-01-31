@@ -8,6 +8,9 @@ import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
@@ -18,13 +21,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun QrCodeList() {
-    // Obtener la instancia de la API y el contexto
     val qrApi = RetrofitInstance.api
     var qrCodes by remember { mutableStateOf<List<QrCode>>(emptyList()) }
     val context = LocalContext.current
     val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    var showAlert by remember { mutableStateOf(false) }
+    var actionType by remember { mutableStateOf("") }
+    var selectedContent by remember { mutableStateOf("") }
 
-    // Cargar la lista de QR escaneados
     LaunchedEffect(Unit) {
         try {
             val response = qrApi.getQrCodes()
@@ -38,30 +42,44 @@ fun QrCodeList() {
         }
     }
 
-    // Mostrar la lista de QR escaneados
     Column {
         qrCodes.forEach { qrCode ->
             ClickableText(
                 text = AnnotatedString(qrCode.contenido),
                 onClick = {
-                    if (isValidUrl(qrCode.contenido)) {
-                        // Abrir enlace en el navegador
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(qrCode.contenido))
-                        context.startActivity(intent)
-                    } else {
-                        // Copiar texto al portapapeles
-                        val clip = ClipData.newPlainText("QR Code", qrCode.contenido)
-                        clipboardManager.setPrimaryClip(clip)
-                        println("Texto copiado al portapapeles: ${qrCode.contenido}")
-                    }
+                    selectedContent = qrCode.contenido
+                    actionType = if (isValidUrl(qrCode.contenido)) "Abrir enlace" else "Copiar texto"
+                    showAlert = true
                 }
             )
             Text(text = "Descripción: ${qrCode.descripcion}")
         }
     }
+
+    if (showAlert) {
+        ConfirmActionDialog(
+            title = "Confirmar Acción",
+            message = "¿Quieres $actionType?",
+            onConfirm = {
+                showAlert = false
+                handleQrCodeAction(context, selectedContent, clipboardManager)
+            },
+            onDismiss = { showAlert = false }
+        )
+    }
 }
 
-// Función para verificar si una cadena es una URL válida
+fun handleQrCodeAction(context: Context, content: String, clipboardManager: ClipboardManager) {
+    if (isValidUrl(content)) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(content))
+        context.startActivity(intent)
+    } else {
+        val clip = ClipData.newPlainText("QR Code", content)
+        clipboardManager.setPrimaryClip(clip)
+        println("Texto copiado al portapapeles: $content")
+    }
+}
+
 fun isValidUrl(url: String): Boolean {
     return try {
         Uri.parse(url).scheme?.let { scheme ->
@@ -70,4 +88,18 @@ fun isValidUrl(url: String): Boolean {
     } catch (e: Exception) {
         false
     }
+}
+
+@Composable
+fun QrCodeListDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text("QR Escaneados Anteriores", style = MaterialTheme.typography.titleMedium) },
+        text = { QrCodeList() },
+        confirmButton = {
+            Button(onClick = { onDismiss() }) {
+                Text("Cerrar")
+            }
+        }
+    )
 }
