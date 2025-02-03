@@ -30,6 +30,8 @@ fun QrCodeList() {
     var showAlert by remember { mutableStateOf(false) }
     var actionType by remember { mutableStateOf("") }
     var selectedContent by remember { mutableStateOf("") }
+    var showEditDialog by remember { mutableStateOf(false) }
+    var selectedQrCode by remember { mutableStateOf<QrCode?>(null) }
 
     LaunchedEffect(Unit) {
         try {
@@ -55,7 +57,14 @@ fun QrCodeList() {
                 },
                 style = androidx.compose.ui.text.TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
             )
-            Text(text = "Descripción: ${qrCode.descripcion}", fontSize = 16.sp)        }
+            Text(text = "Descripción: ${qrCode.descripcion}", fontSize = 16.sp)
+            Button(onClick = {
+                selectedQrCode = qrCode
+                showEditDialog = true
+            }) {
+                Text("Modificar")
+            }
+        }
     }
 
     if (showAlert) {
@@ -68,6 +77,10 @@ fun QrCodeList() {
             },
             onDismiss = { showAlert = false }
         )
+    }
+
+    if (showEditDialog && selectedQrCode != null) {
+        EditQrCodeDialog(qrCode = selectedQrCode!!, onDismiss = { showEditDialog = false })
     }
 }
 

@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.net.Uri
 import android.os.Bundle
+import android.webkit.URLUtil.isValidUrl
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -60,7 +61,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp() {
@@ -68,16 +68,7 @@ fun MyApp() {
     val view = LocalView.current
     val isDarkTheme = isSystemInDarkTheme()
 
-    // Establecer el color de la barra de notificaciones
-    SideEffect {
-        val window = (context as AppCompatActivity).window
-        window.statusBarColor = if (isDarkTheme) {
-            androidx.compose.ui.graphics.Color.Black.toArgb() // colorPrimary para tema oscuro
-        } else {
-            androidx.compose.ui.graphics.Color(0xFF6200EE).toArgb() // colorPrimary para tema claro
-        }
-        ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = !isDarkTheme
-    }
+
 
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
     var qrCode by remember { mutableStateOf("") }
@@ -92,7 +83,6 @@ fun MyApp() {
             qrBitmap = generateQrCodeBitmap(qrCode)
         }
     }
-
     val onQrCodeClick: () -> Unit = {
         showAlert = true
     }
@@ -148,7 +138,6 @@ fun MyApp() {
                         modifier = Modifier.padding(top = 16.dp)
                     )
                 }
-
                 Spacer(modifier = Modifier.height(32.dp))
 
                 if (cameraPermissionState.status.isGranted) {
@@ -205,7 +194,6 @@ fun MyApp() {
                 ) {
                     Text("Ver QR Escaneados Anteriores", fontSize = 18.sp)
                 }
-
                 if (showDialog) {
                     QrCodeListDialog(onDismiss = { showDialog = false })
                 }
@@ -225,7 +213,6 @@ fun MyApp() {
         }
     )
 }
-
 fun handleQrCodeAction(context: Context, content: String) {
     if (isValidUrl(content)) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(content))
@@ -276,6 +263,24 @@ fun generateQrCodeBitmap(content: String): Bitmap? {
     } catch (e: WriterException) {
         e.printStackTrace()
         null
+    }
+}
+fun deleteQrCode(id: Long) {
+    val qrApi = RetrofitInstance.api
+
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = qrApi.deleteQrCode(id)
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    println("QR Code eliminado exitosamente")
+                } else {
+                    println("Error al eliminar QR Code: ${response.errorBody()?.string()}")
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
 

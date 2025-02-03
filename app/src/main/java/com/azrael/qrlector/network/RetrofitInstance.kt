@@ -5,11 +5,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
     private const val BASE_URL = "https://apiq2.onrender.com/"
-        val api: QrApi by lazy {
+    private val retrofit by lazy {
             Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BASE_URL)  // Asegúrate de poner aquí tu URL base de la API
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(QrApi::class.java)
+        }
+
+        val api: QrApi by lazy {
+            retrofit.create(QrApi::class.java)
         }
     }
