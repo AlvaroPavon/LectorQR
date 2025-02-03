@@ -12,8 +12,7 @@ data class QrCode(
     val id: Long? = null,  // Hacer el id opcional
     var contenido: String,
     var descripcion: String,
-    var modificaciones: Int = 0,
-    var fechaModificacion: String? = null
+    var fechaModificacion: String? = null,
 )
 
 

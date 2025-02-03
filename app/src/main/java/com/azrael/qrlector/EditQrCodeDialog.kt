@@ -20,6 +20,9 @@ import java.util.*
 @Composable
 fun EditQrCodeDialog(qrCode: QrCode, onDismiss: () -> Unit, onEdit: (QrCode) -> Unit) {
     var newContent by remember { mutableStateOf(TextFieldValue(qrCode.contenido)) }
+    var fechaModificacion by remember { mutableStateOf(qrCode.fechaModificacion ?: "") }
+    var descripcion by remember { mutableStateOf(qrCode.descripcion ?: "") }
+
     val context = LocalContext.current
 
     AlertDialog(
@@ -33,18 +36,26 @@ fun EditQrCodeDialog(qrCode: QrCode, onDismiss: () -> Unit, onEdit: (QrCode) -> 
                     label = { Text("Contenido del QR") },
                     modifier = Modifier.fillMaxWidth()
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Descripción: $descripcion")
             }
         },
         confirmButton = {
             Button(
                 onClick = {
                     onDismiss()
-                    qrCode.contenido = newContent.text
-                    qrCode.modificaciones += 1
-                    qrCode.fechaModificacion = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-                    qrCode.descripcion = "QR modificado (${qrCode.modificaciones} veces) ${qrCode.fechaModificacion}"
-                    updateQrCode(context, qrCode.id!!, qrCode)
-                    onEdit(qrCode) // Llamar a la función onEdit tras la modificación
+
+                    fechaModificacion = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+                    descripcion = "QR modificado (Última modificación: $fechaModificacion)"
+
+                    val updatedQrCode = qrCode.copy(
+                        contenido = newContent.text,
+                        fechaModificacion = fechaModificacion,
+                        descripcion = descripcion
+                    )
+
+                    updateQrCode(context, updatedQrCode.id!!, updatedQrCode)
+                    onEdit(updatedQrCode) // Llamar a la función con el objeto actualizado
                 }
             ) {
                 Text("Guardar")

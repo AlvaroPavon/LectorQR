@@ -53,7 +53,6 @@ fun QrCodeList(
     var qrCodeToDelete by remember { mutableStateOf<QrCode?>(null) }
 
     val updatedQrCodes by rememberUpdatedState(qrCodes)
-    val updatedOnEdit by rememberUpdatedState(onEdit)
 
     LaunchedEffect(Unit) {
         try {
@@ -65,6 +64,16 @@ fun QrCodeList(
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    fun updateLocalQrCode(qrCode: QrCode) {
+        qrCodes = updatedQrCodes.map {
+            if (it.id == qrCode.id) {
+                qrCode
+            } else {
+                it
+            }
         }
     }
 
@@ -136,7 +145,7 @@ fun QrCodeList(
             qrCode = selectedQrCode!!,
             onDismiss = { showEditDialog = false },
             onEdit = { qrCode ->
-                updatedOnEdit(qrCode) // Actualizar el QR Code editado en la lista
+                updateLocalQrCode(qrCode)
             }
         )
     }
@@ -152,6 +161,7 @@ fun QrCodeList(
         )
     }
 }
+
 
 
 
