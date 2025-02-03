@@ -6,12 +6,10 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.os.Build
 import android.net.Uri
 import android.os.Bundle
 import android.webkit.URLUtil.isValidUrl
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,15 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -44,14 +38,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.asImageBitmap
 import com.azrael.qrlector.network.QrCode
 import com.azrael.qrlector.network.RetrofitInstance
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
-import com.azrael.qrlector.ConfirmActionDialog
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,16 +57,14 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     val context = LocalContext.current
-    val view = LocalView.current
-    val isDarkTheme = isSystemInDarkTheme()
-
-
-
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
     var qrCode by remember { mutableStateOf("") }
     var qrBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     var showAlert by remember { mutableStateOf(false) }
+    var qrCodes by remember { mutableStateOf<List<QrCode>>(emptyList()) }
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
+    var qrCodeToDelete by remember { mutableStateOf<QrCode?>(null) }
 
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
         if (result.contents != null) {
@@ -83,8 +73,19 @@ fun MyApp() {
             qrBitmap = generateQrCodeBitmap(qrCode)
         }
     }
+
     val onQrCodeClick: () -> Unit = {
         showAlert = true
+    }
+
+    fun updateQrCodeLocal(qrCode: QrCode) {
+        qrCodes = qrCodes.map {
+            if (it.id == qrCode.id) {
+                qrCode
+            } else {
+                it
+            }
+        }
     }
 
     Scaffold(
@@ -138,6 +139,7 @@ fun MyApp() {
                         modifier = Modifier.padding(top = 16.dp)
                     )
                 }
+
                 Spacer(modifier = Modifier.height(32.dp))
 
                 if (cameraPermissionState.status.isGranted) {
@@ -194,8 +196,40 @@ fun MyApp() {
                 ) {
                     Text("Ver QR Escaneados Anteriores", fontSize = 18.sp)
                 }
+
                 if (showDialog) {
-                    QrCodeListDialog(onDismiss = { showDialog = false })
+                    AlertDialog(
+                        onDismissRequest = { showDialog = false },
+                        title = { Text("QR Escaneados Anteriores") },
+                        text = {
+                            QrCodeList(
+                                onDismiss = { showDialog = false },
+                                onDelete = { qrCode ->
+                                    qrCodeToDelete = qrCode
+                                    showDeleteConfirmation = true
+                                },
+                                onEdit = { qrCode ->
+                                    updateQrCodeLocal(qrCode)
+                                }
+                            )
+                        },
+                        confirmButton = {
+                            Button(onClick = { showDialog = false }) {
+                                Text("Cerrar")
+                            }
+                        }
+                    )
+                }
+
+                if (showDeleteConfirmation) {
+                    DeleteConfirmationDialog(
+                        qrCode = qrCodeToDelete!!,
+                        onConfirm = {
+                            qrCodeToDelete!!.id?.let { deleteQrCode(context, it) }
+                            showDeleteConfirmation = false
+                        },
+                        onDismiss = { showDeleteConfirmation = false }
+                    )
                 }
 
                 if (showAlert) {
@@ -213,6 +247,9 @@ fun MyApp() {
         }
     )
 }
+
+
+
 fun handleQrCodeAction(context: Context, content: String) {
     if (isValidUrl(content)) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(content))
@@ -224,7 +261,6 @@ fun handleQrCodeAction(context: Context, content: String) {
         println("Texto copiado al portapapeles: $content")
     }
 }
-
 fun saveQrCode(qrCode: String) {
     val qrApi = RetrofitInstance.api
     val newQrCode = QrCode(contenido = qrCode, descripcion = "QR Code escaneado")
@@ -265,7 +301,7 @@ fun generateQrCodeBitmap(content: String): Bitmap? {
         null
     }
 }
-fun deleteQrCode(id: Long) {
+fun deleteQrCode(context: Context, id: Long) {
     val qrApi = RetrofitInstance.api
 
     CoroutineScope(Dispatchers.IO).launch {

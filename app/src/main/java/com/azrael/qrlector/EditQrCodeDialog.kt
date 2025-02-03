@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun EditQrCodeDialog(qrCode: QrCode, onDismiss: () -> Unit) {
+fun EditQrCodeDialog(qrCode: QrCode, onDismiss: () -> Unit, onEdit: (QrCode) -> Unit) {
     var newContent by remember { mutableStateOf(TextFieldValue(qrCode.contenido)) }
     val context = LocalContext.current
 
@@ -43,7 +43,8 @@ fun EditQrCodeDialog(qrCode: QrCode, onDismiss: () -> Unit) {
                     qrCode.modificaciones += 1
                     qrCode.fechaModificacion = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
                     qrCode.descripcion = "QR modificado (${qrCode.modificaciones} veces) ${qrCode.fechaModificacion}"
-                    qrCode.id?.let { updateQrCode(context, it, qrCode) }
+                    updateQrCode(context, qrCode.id!!, qrCode)
+                    onEdit(qrCode) // Llamar a la función onEdit tras la modificación
                 }
             ) {
                 Text("Guardar")
