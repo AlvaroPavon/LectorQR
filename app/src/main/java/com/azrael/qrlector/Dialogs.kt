@@ -6,12 +6,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 
-
 @Composable
 fun ConfirmActionDialog(
     title: String,
     message: String,
-    onConfirm: @Composable () -> Unit,
+    onConfirm: () -> Unit,  // Eliminamos @Composable aquí
     onDismiss: () -> Unit
 ) {
     AlertDialog(
@@ -19,7 +18,7 @@ fun ConfirmActionDialog(
         title = { Text(title) },
         text = { Text(message) },
         confirmButton = {
-            Button(onClick = onConfirm) {
+            Button(onClick = { onConfirm() }) {
                 Text(stringResource(R.string.s))
             }
         },

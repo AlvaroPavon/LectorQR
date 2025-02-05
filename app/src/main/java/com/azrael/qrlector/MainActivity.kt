@@ -66,17 +66,14 @@ fun MyApp() {
     var qrCodes by remember { mutableStateOf<List<QrCode>>(emptyList()) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
     var qrCodeToDelete by remember { mutableStateOf<QrCode?>(null) }
+    var executeAction by remember { mutableStateOf(false) }  // Estado para ejecutar la acción fuera de @Composable
 
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
         if (result.contents != null) {
             qrCode = result.contents
-            saveQrCode(context,qrCode)
+            saveQrCode(context, qrCode)
             qrBitmap = generateQrCodeBitmap(qrCode)
         }
-    }
-
-    val onQrCodeClick: () -> Unit = {
-        showAlert = true
     }
 
     fun updateQrCodeLocal(qrCode: QrCode) {
@@ -111,7 +108,7 @@ fun MyApp() {
                 qrBitmap?.let {
                     Box(
                         modifier = Modifier
-                            .size(300.dp) // Hacer el QR más grande
+                            .size(300.dp)
                             .shadow(8.dp, RoundedCornerShape(16.dp))
                             .clip(RoundedCornerShape(16.dp))
                             .background(
@@ -122,7 +119,7 @@ fun MyApp() {
                                     )
                                 )
                             )
-                            .clickable(onClick = onQrCodeClick)
+                            .clickable { showAlert = true }
                             .padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
@@ -195,7 +192,7 @@ fun MyApp() {
                         .clip(RoundedCornerShape(8.dp))
                         .background(MaterialTheme.colorScheme.primaryContainer)
                 ) {
-                    Text(stringResource(R.string.ver_qr_escaneados_anteriores), fontSize = 18.sp)
+                    Text(stringResource(R.string.qr_escaneados_anteriores), fontSize = 18.sp)
                 }
 
                 if (showDialog) {
@@ -236,13 +233,18 @@ fun MyApp() {
                 if (showAlert) {
                     ConfirmActionDialog(
                         title = stringResource(R.string.confirmar_acci_n),
-                        message = stringResource(R.string.quieres_abrir_el_enlace_o_copiar_el_texto),
+                        message = stringResource(R.string.quieres, stringResource(R.string.abrir_enlace)),
                         onConfirm = {
+                            executeAction = true  // Activamos el estado
                             showAlert = false
-                            handleQrCodeAction(context, qrCode)
                         },
                         onDismiss = { showAlert = false }
                     )
+                }
+
+                if (executeAction) {
+                    handleQrCodeAction(context, qrCode)  // Ejecutamos la acción fuera de @Composable
+                    executeAction = false
                 }
             }
         }
@@ -250,19 +252,6 @@ fun MyApp() {
 }
 
 
-
-@Composable
-fun handleQrCodeAction(context: Context, content: String) {
-    if (isValidUrl(content)) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(content))
-        context.startActivity(intent)
-    } else {
-        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText(stringResource(R.string.qr_code), content)
-        clipboardManager.setPrimaryClip(clip)
-        println(stringResource(R.string.texto_copiado_al_portapapeles, content))
-    }
-}
 
 fun saveQrCode(context: Context, qrCode: String) {
     val qrApi = RetrofitInstance.api
@@ -283,6 +272,20 @@ fun saveQrCode(context: Context, qrCode: String) {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+}
+
+
+@Composable
+fun handleQrCodeAction(context: Context, content: String) {
+    if (isValidUrl(content)) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(content))
+        context.startActivity(intent)
+    } else {
+        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText(stringResource(R.string.qr_code), content)
+        clipboardManager.setPrimaryClip(clip)
+        println(stringResource(R.string.texto_copiado_al_portapapeles, content))
     }
 }
 

@@ -17,7 +17,7 @@
     <string name="error_al_actualizar_qr_code">Error al actualizar QR Code: %1$s</string>
     <string name="qr_scanner_app">QR Scanner App</string>
     <string name="qr_code">QR Code</string>
-    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="scan_qr_code">Escanear QR Code</string>
     <string name="permiso_de_camara_es_requerido_para_escanear_qr_codes">Permiso de camara es requerido para escanear QR Codes.</string>
     <string name="request_permission">Request Permission</string>
     <string name="ver_qr_escaneados_anteriores">Ver QR Escaneados Anteriores</string>

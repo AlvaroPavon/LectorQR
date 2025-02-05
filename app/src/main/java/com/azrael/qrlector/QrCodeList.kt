@@ -52,6 +52,7 @@ fun QrCodeList(
     var selectedQrCode by remember { mutableStateOf<QrCode?>(null) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
     var qrCodeToDelete by remember { mutableStateOf<QrCode?>(null) }
+    var executeAction by remember { mutableStateOf(false) }  // Estado para ejecutar la acción fuera de @Composable
 
     val updatedQrCodes by rememberUpdatedState(qrCodes)
 
@@ -140,8 +141,8 @@ fun QrCodeList(
             title = stringResource(R.string.confirmar_acci_n),
             message = stringResource(R.string.quieres, actionType),
             onConfirm = {
+                executeAction = true  // Activamos el estado
                 showAlert = false
-                handleQrCodeAction(context, selectedContent)
             },
             onDismiss = { showAlert = false }
         )
@@ -167,11 +168,9 @@ fun QrCodeList(
             onDismiss = { showDeleteConfirmation = false }
         )
     }
+
+    if (executeAction) {
+        handleQrCodeAction(context, selectedContent)  // Ejecutamos la acción fuera de @Composable
+        executeAction = false
+    }
 }
-
-
-
-
-
-
-
