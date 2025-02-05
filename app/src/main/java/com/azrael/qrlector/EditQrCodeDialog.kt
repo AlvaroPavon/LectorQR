@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.azrael.qrlector.network.QrCode
@@ -27,17 +28,17 @@ fun EditQrCodeDialog(qrCode: QrCode, onDismiss: () -> Unit, onEdit: (QrCode) -> 
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text("Modificar QR Code") },
+        title = { Text(stringResource(R.string.modificar_qr_code)) },
         text = {
             Column {
                 OutlinedTextField(
                     value = newContent,
                     onValueChange = { newContent = it },
-                    label = { Text("Contenido del QR") },
+                    label = { Text(stringResource(R.string.contenido_del_qr)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Descripción: $descripcion")
+                Text(stringResource(R.string.descripci_n, descripcion))
             }
         },
         confirmButton = {
@@ -45,8 +46,11 @@ fun EditQrCodeDialog(qrCode: QrCode, onDismiss: () -> Unit, onEdit: (QrCode) -> 
                 onClick = {
                     onDismiss()
 
-                    fechaModificacion = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-                    descripcion = "QR modificado (Última modificación: $fechaModificacion)"
+                    fechaModificacion = SimpleDateFormat(context.getString(R.string.yyyy_mm_dd_hh_mm_ss), Locale.getDefault()).format(Date())
+                    descripcion = context.getString(
+                        R.string.qr_modificado_ltima_modificaci_n,
+                        fechaModificacion
+                    )
 
                     val updatedQrCode = qrCode.copy(
                         contenido = newContent.text,
@@ -58,12 +62,12 @@ fun EditQrCodeDialog(qrCode: QrCode, onDismiss: () -> Unit, onEdit: (QrCode) -> 
                     onEdit(updatedQrCode) // Llamar a la función con el objeto actualizado
                 }
             ) {
-                Text("Guardar")
+                Text(stringResource(R.string.guardar))
             }
         },
         dismissButton = {
             Button(onClick = { onDismiss() }) {
-                Text("Cancelar")
+                Text(stringResource(R.string.cancelar))
             }
         }
     )
@@ -77,9 +81,17 @@ fun updateQrCode(context: Context, id: Long, qrCode: QrCode) {
             val response = qrApi.updateQrCode(id, qrCode)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    println("QR Code actualizado exitosamente: ${response.body()}")
+                    println(
+                        context.getString(
+                            R.string.qr_code_actualizado_exitosamente,
+                            response.body()
+                        ))
                 } else {
-                    println("Error al actualizar QR Code: ${response.errorBody()?.string()}")
+                    println(
+                        context.getString(
+                            R.string.error_al_actualizar_qr_code,
+                            response.errorBody()?.string()
+                        ))
                 }
             }
         } catch (e: Exception) {

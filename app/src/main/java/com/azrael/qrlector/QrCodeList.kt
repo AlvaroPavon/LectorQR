@@ -33,6 +33,7 @@ import kotlinx.coroutines.withContext
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun QrCodeList(
@@ -60,7 +61,11 @@ fun QrCodeList(
             if (response.isSuccessful) {
                 qrCodes = response.body() ?: emptyList()
             } else {
-                println("Error al obtener QR Codes: ${response.errorBody()?.string()}")
+                println(
+                    context.getString(
+                        R.string.error_al_obtener_qr_codes,
+                        response.errorBody()?.string()
+                    ))
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -84,9 +89,9 @@ fun QrCodeList(
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         qrCodes = updatedQrCodes.filter { it.id != id } // Eliminar localmente el QR Code de la lista
-                        println("QR Code eliminado exitosamente")
+                        println(context.getString(R.string.qr_code_eliminado_exitosamente))
                     } else {
-                        println("Error al eliminar QR Code: ${response.errorBody()?.string()}")
+                        println(context.getString(R.string.error_al_eliminar_qr_code, response.errorBody()?.string()))
                     }
                 }
             } catch (e: Exception) {
@@ -102,25 +107,27 @@ fun QrCodeList(
                     text = AnnotatedString(qrCode.contenido),
                     onClick = {
                         selectedContent = qrCode.contenido
-                        actionType = if (isValidUrl(qrCode.contenido)) "Abrir enlace" else "Copiar texto"
+                        actionType = if (isValidUrl(qrCode.contenido)) context.getString(R.string.abrir_enlace) else context.getString(
+                            R.string.copiar_texto
+                        )
                         showAlert = true
                     },
                     style = androidx.compose.ui.text.TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 )
-                Text(text = "Descripción: ${qrCode.descripcion}", fontSize = 16.sp)
+                Text(stringResource(R.string.contenido_del_qr, qrCode.contenido), fontSize = 16.sp)
                 Row {
                     Button(onClick = {
                         selectedQrCode = qrCode
                         showEditDialog = true
                     }) {
-                        Text("Modificar")
+                        Text(stringResource(R.string.modificar))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = {
                         qrCodeToDelete = qrCode
                         showDeleteConfirmation = true
                     }) {
-                        Text("Eliminar")
+                        Text(stringResource(R.string.eliminar))
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -130,8 +137,8 @@ fun QrCodeList(
 
     if (showAlert) {
         ConfirmActionDialog(
-            title = "Confirmar Acción",
-            message = "¿Quieres $actionType?",
+            title = stringResource(R.string.confirmar_acci_n),
+            message = stringResource(R.string.quieres, actionType),
             onConfirm = {
                 showAlert = false
                 handleQrCodeAction(context, selectedContent)

@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">QrLector</string>
     <string name="est_s_seguro_de_que_quieres_eliminar_este_qr_code">¿Estás seguro de que quieres eliminar este QR Code?</string>
     <string name="contenido">Contenido: %1$s</string>
     <string name="eliminar">Eliminar</string>
@@ -29,13 +29,10 @@
     <string name="qr_code_escaneado">QR Code escaneado</string>
     <string name="qr_code_eliminado_exitosamente">QR Code eliminado exitosamente</string>
     <string name="error_al_eliminar_qr_code">Error al eliminar QR Code: %1$s</string>
-    <string name="qr_code_guardado_exitosamente">QR Code guardado exitosamente: %1$s</string>
     <string name="error_al_guardar_qr_code">Error al guardar QR Code: %1$s</string>
     <string name="error_al_obtener_qr_codes">Error al obtener QR Codes: %1$s</string>
     <string name="abrir_enlace">Abrir enlace</string>
     <string name="copiar_texto">Copiar texto</string>
     <string name="modificar">Modificar</string>
     <string name="quieres">¿Quieres %1$s?</string>
-
-
 </resources>

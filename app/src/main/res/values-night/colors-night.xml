@@ -1,6 +1,6 @@
 <resources>
     <!-- Colores primarios y secundarios oscuros -->
-    <color name="colorPrimary">#BB86FC</color> <!-- Púrpura claro -->
+    <color name="colorPrimary">#6200EE</color> <!-- Púrpura -->
     <color name="colorPrimaryVariant">#3700B3</color>
     <color name="colorSecondary">#03DAC6</color> <!-- Turquesa -->
     <color name="colorSecondaryVariant">#018786</color>

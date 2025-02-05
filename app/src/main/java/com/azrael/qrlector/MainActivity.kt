@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.stringResource
 import com.azrael.qrlector.network.QrCode
 import com.azrael.qrlector.network.RetrofitInstance
 import com.google.zxing.BarcodeFormat
@@ -69,7 +70,7 @@ fun MyApp() {
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
         if (result.contents != null) {
             qrCode = result.contents
-            saveQrCode(qrCode)
+            saveQrCode(context,qrCode)
             qrBitmap = generateQrCodeBitmap(qrCode)
         }
     }
@@ -91,7 +92,7 @@ fun MyApp() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("QR Scanner App", style = MaterialTheme.typography.titleLarge) },
+                title = { Text(stringResource(R.string.qr_scanner_app), style = MaterialTheme.typography.titleLarge) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -127,7 +128,7 @@ fun MyApp() {
                     ) {
                         Image(
                             bitmap = it.asImageBitmap(),
-                            contentDescription = "QR Code",
+                            contentDescription = stringResource(R.string.qr_code),
                             modifier = Modifier.size(250.dp)
                         )
                     }
@@ -156,11 +157,11 @@ fun MyApp() {
                             .clip(RoundedCornerShape(8.dp))
                             .background(MaterialTheme.colorScheme.primary)
                     ) {
-                        Text("Scan QR Code", fontSize = 18.sp)
+                        Text(stringResource(R.string.scan_qr_code), fontSize = 18.sp)
                     }
                 } else {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Camera permission is required to scan QR codes.", fontSize = 16.sp)
+                        Text(stringResource(R.string.permiso_de_camara_es_requerido_para_escanear_qr_codes), fontSize = 16.sp)
                         Spacer(modifier = Modifier.height(8.dp))
                         Button(
                             onClick = { cameraPermissionState.launchPermissionRequest() },
@@ -175,7 +176,7 @@ fun MyApp() {
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(MaterialTheme.colorScheme.secondary)
                         ) {
-                            Text("Request Permission", fontSize = 16.sp)
+                            Text(stringResource(R.string.request_permission), fontSize = 16.sp)
                         }
                     }
                 }
@@ -194,13 +195,13 @@ fun MyApp() {
                         .clip(RoundedCornerShape(8.dp))
                         .background(MaterialTheme.colorScheme.primaryContainer)
                 ) {
-                    Text("Ver QR Escaneados Anteriores", fontSize = 18.sp)
+                    Text(stringResource(R.string.ver_qr_escaneados_anteriores), fontSize = 18.sp)
                 }
 
                 if (showDialog) {
                     AlertDialog(
                         onDismissRequest = { showDialog = false },
-                        title = { Text("QR Escaneados Anteriores") },
+                        title = { Text(stringResource(R.string.qr_escaneados_anteriores)) },
                         text = {
                             QrCodeList(
                                 onDismiss = { showDialog = false },
@@ -215,7 +216,7 @@ fun MyApp() {
                         },
                         confirmButton = {
                             Button(onClick = { showDialog = false }) {
-                                Text("Cerrar")
+                                Text(stringResource(R.string.cerrar))
                             }
                         }
                     )
@@ -234,8 +235,8 @@ fun MyApp() {
 
                 if (showAlert) {
                     ConfirmActionDialog(
-                        title = "Confirmar Acción",
-                        message = "¿Quieres abrir el enlace o copiar el texto?",
+                        title = stringResource(R.string.confirmar_acci_n),
+                        message = stringResource(R.string.quieres_abrir_el_enlace_o_copiar_el_texto),
                         onConfirm = {
                             showAlert = false
                             handleQrCodeAction(context, qrCode)
@@ -250,29 +251,33 @@ fun MyApp() {
 
 
 
+@Composable
 fun handleQrCodeAction(context: Context, content: String) {
     if (isValidUrl(content)) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(content))
         context.startActivity(intent)
     } else {
         val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("QR Code", content)
+        val clip = ClipData.newPlainText(stringResource(R.string.qr_code), content)
         clipboardManager.setPrimaryClip(clip)
-        println("Texto copiado al portapapeles: $content")
+        println(stringResource(R.string.texto_copiado_al_portapapeles, content))
     }
 }
-fun saveQrCode(qrCode: String) {
+
+fun saveQrCode(context: Context, qrCode: String) {
     val qrApi = RetrofitInstance.api
-    val newQrCode = QrCode(contenido = qrCode, descripcion = "QR Code escaneado")
+    val newQrCode = QrCode(contenido = qrCode, descripcion = context.getString(R.string.qr_code_escaneado))
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
             val response = qrApi.saveQrCode(newQrCode)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    println("QR Code guardado exitosamente: ${response.body()}")
+                    println(response.body()
+                        ?.let { context.getString(R.string.qr_code_guardado_exitosamente, it) })
                 } else {
-                    println("Error al guardar QR Code: ${response.errorBody()?.string()}")
+                    println(response.errorBody()?.string()
+                        ?.let { context.getString(R.string.error_al_guardar_qr_code, it) })
                 }
             }
         } catch (e: Exception) {
@@ -280,6 +285,7 @@ fun saveQrCode(qrCode: String) {
         }
     }
 }
+
 
 fun generateQrCodeBitmap(content: String): Bitmap? {
     val writer = QRCodeWriter()
@@ -309,9 +315,13 @@ fun deleteQrCode(context: Context, id: Long) {
             val response = qrApi.deleteQrCode(id)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    println("QR Code eliminado exitosamente")
+                    println(context.getString(R.string.qr_code_eliminado_exitosamente))
                 } else {
-                    println("Error al eliminar QR Code: ${response.errorBody()?.string()}")
+                    println(
+                        context.getString(
+                            R.string.error_al_eliminar_qr_code,
+                            response.errorBody()?.string()
+                        ))
                 }
             }
         } catch (e: Exception) {
