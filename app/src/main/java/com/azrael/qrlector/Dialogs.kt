@@ -10,7 +10,7 @@ import androidx.compose.ui.res.stringResource
 fun ConfirmActionDialog(
     title: String,
     message: String,
-    onConfirm: () -> Unit,  // Eliminamos @Composable aquí
+    onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
