@@ -9,6 +9,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.azrael.qrlector.network.QrCode
 
+/**
+ * Muestra un diálogo de confirmación para eliminar un código QR.
+ *
+ * Esta función composable despliega un [AlertDialog] que solicita al usuario confirmar o cancelar
+ * la eliminación del código QR especificado. Se muestra el contenido del código QR en el diálogo.
+ *
+ * @param qrCode Objeto [QrCode] que contiene la información del código QR a eliminar.
+ * @param onConfirm Función lambda que se invoca cuando el usuario confirma la eliminación.
+ * @param onDismiss Función lambda que se invoca cuando el usuario cancela o cierra el diálogo.
+ */
 @Composable
 fun DeleteConfirmationDialog(
     qrCode: QrCode,

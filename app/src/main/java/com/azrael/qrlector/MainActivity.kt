@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,14 +40,25 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.res.stringResource
 import com.azrael.qrlector.network.QrCode
 import com.azrael.qrlector.network.RetrofitInstance
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
 
+/**
+ * @author Alvaro Pavon Martinez
+ *
+ * Clase principal de la aplicación que extiende AppCompatActivity.
+ *
+ * Esta actividad establece el contenido de la UI mediante la función composable [MyApp].
+ */
 class MainActivity : AppCompatActivity() {
+    /**
+     * Método que se ejecuta al crear la actividad.
+     *
+     * @param savedInstanceState Estado guardado de la actividad.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -54,20 +66,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+/**
+ * Función composable principal que representa la interfaz de usuario de la aplicación.
+ *
+ * En ella se gestionan:
+ * - La visualización del código QR generado (imagen y texto).
+ * - El escaneo de nuevos códigos QR, solicitando permisos de cámara si es necesario.
+ * - La persistencia del código QR en el servidor mediante Retrofit.
+ * - La interacción del usuario a través de diálogos para confirmar acciones, listar códigos escaneados y eliminar códigos.
+ */
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp() {
+    // Contexto de la aplicación
     val context = LocalContext.current
+
+    // Estado para gestionar el permiso de cámara
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
+
+    // Estado que almacena el contenido del código QR escaneado
     var qrCode by remember { mutableStateOf("") }
+
+    // Estado que almacena el bitmap generado a partir del contenido del código QR
     var qrBitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+    // Estados para controlar la visibilidad de diálogos y alertas
     var showDialog by remember { mutableStateOf(false) }
     var showAlert by remember { mutableStateOf(false) }
+
+    // Lista de códigos QR previamente escaneados
     var qrCodes by remember { mutableStateOf<List<QrCode>>(emptyList()) }
+
+    // Estados para la confirmación de eliminación y para almacenar el código QR a eliminar
     var showDeleteConfirmation by remember { mutableStateOf(false) }
     var qrCodeToDelete by remember { mutableStateOf<QrCode?>(null) }
-    var executeAction by remember { mutableStateOf(false) }  // Estado para ejecutar la acción fuera de @Composable
 
+    // Estado para ejecutar acciones (fuera del bloque composable)
+    var executeAction by remember { mutableStateOf(false) }
+
+    // Lanzador para iniciar el escaneo del código QR mediante [ScanContract]
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
         if (result.contents != null) {
             qrCode = result.contents
@@ -76,6 +114,11 @@ fun MyApp() {
         }
     }
 
+    /**
+     * Función local para actualizar un código QR en la lista de códigos almacenados.
+     *
+     * @param qrCode El código QR actualizado.
+     */
     fun updateQrCodeLocal(qrCode: QrCode) {
         qrCodes = qrCodes.map {
             if (it.id == qrCode.id) {
@@ -86,6 +129,7 @@ fun MyApp() {
         }
     }
 
+    // Estructura principal de la UI utilizando Scaffold
     Scaffold(
         topBar = {
             TopAppBar(
@@ -105,6 +149,7 @@ fun MyApp() {
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Muestra el bitmap del código QR, si ha sido generado
                 qrBitmap?.let {
                     Box(
                         modifier = Modifier
@@ -129,6 +174,7 @@ fun MyApp() {
                             modifier = Modifier.size(250.dp)
                         )
                     }
+                    // Muestra el contenido del código QR en forma de texto
                     Text(
                         text = qrCode,
                         fontSize = 18.sp,
@@ -140,6 +186,7 @@ fun MyApp() {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+                // Si el permiso de cámara está concedido, se muestra el botón para escanear el código QR
                 if (cameraPermissionState.status.isGranted) {
                     Button(
                         onClick = { scanLauncher.launch(ScanOptions()) },
@@ -157,6 +204,7 @@ fun MyApp() {
                         Text(stringResource(R.string.scan_qr_code), fontSize = 18.sp)
                     }
                 } else {
+                    // Si no se tiene permiso de cámara, se muestra un mensaje y un botón para solicitarlo
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(stringResource(R.string.permiso_de_camara_es_requerido_para_escanear_qr_codes), fontSize = 16.sp)
                         Spacer(modifier = Modifier.height(8.dp))
@@ -179,6 +227,7 @@ fun MyApp() {
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
+                // Botón para mostrar los códigos QR escaneados anteriormente
                 Button(
                     onClick = { showDialog = true },
                     colors = ButtonDefaults.buttonColors(
@@ -195,6 +244,7 @@ fun MyApp() {
                     Text(stringResource(R.string.qr_escaneados_anteriores), fontSize = 18.sp)
                 }
 
+                // Diálogo que muestra la lista de códigos QR escaneados anteriormente
                 if (showDialog) {
                     AlertDialog(
                         onDismissRequest = { showDialog = false },
@@ -219,6 +269,7 @@ fun MyApp() {
                     )
                 }
 
+                // Diálogo de confirmación para eliminar un código QR
                 if (showDeleteConfirmation) {
                     DeleteConfirmationDialog(
                         qrCode = qrCodeToDelete!!,
@@ -230,20 +281,22 @@ fun MyApp() {
                     )
                 }
 
+                // Diálogo para confirmar la acción al pulsar sobre el código QR mostrado
                 if (showAlert) {
                     ConfirmActionDialog(
                         title = stringResource(R.string.confirmar_acci_n),
                         message = stringResource(R.string.quieres, stringResource(R.string.abrir_enlace)),
                         onConfirm = {
-                            executeAction = true  // Activamos el estado
+                            executeAction = true  // Se activa el estado para ejecutar la acción
                             showAlert = false
                         },
                         onDismiss = { showAlert = false }
                     )
                 }
 
+                // Si se confirma la acción, se ejecuta la acción correspondiente fuera del bloque composable
                 if (executeAction) {
-                    handleQrCodeAction(context, qrCode)  // Ejecutamos la acción fuera de @Composable
+                    handleQrCodeAction(context, qrCode)
                     executeAction = false
                 }
             }
@@ -251,8 +304,12 @@ fun MyApp() {
     )
 }
 
-
-
+/**
+ * Guarda el código QR escaneado en un servidor remoto utilizando Retrofit.
+ *
+ * @param context El contexto de la aplicación.
+ * @param qrCode El contenido del código QR a guardar.
+ */
 fun saveQrCode(context: Context, qrCode: String) {
     val qrApi = RetrofitInstance.api
     val newQrCode = QrCode(contenido = qrCode, descripcion = context.getString(R.string.qr_code_escaneado))
@@ -275,7 +332,15 @@ fun saveQrCode(context: Context, qrCode: String) {
     }
 }
 
-
+/**
+ * Maneja la acción asociada al contenido del código QR.
+ *
+ * Si el contenido es una URL válida, se abre en el navegador.
+ * De lo contrario, se copia el contenido al portapapeles.
+ *
+ * @param context El contexto de la aplicación.
+ * @param content El contenido del código QR.
+ */
 @Composable
 fun handleQrCodeAction(context: Context, content: String) {
     if (isValidUrl(content)) {
@@ -289,7 +354,12 @@ fun handleQrCodeAction(context: Context, content: String) {
     }
 }
 
-
+/**
+ * Genera un Bitmap que representa el código QR a partir del contenido proporcionado.
+ *
+ * @param content El contenido a codificar en el código QR.
+ * @return Un Bitmap con el código QR, o null si ocurre un error durante la generación.
+ */
 fun generateQrCodeBitmap(content: String): Bitmap? {
     val writer = QRCodeWriter()
     return try {
@@ -297,8 +367,8 @@ fun generateQrCodeBitmap(content: String): Bitmap? {
         val width = bitMatrix.width
         val height = bitMatrix.height
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-        val black = androidx.compose.ui.graphics.Color.Black.toArgb() // Convertir a Int
-        val white = androidx.compose.ui.graphics.Color.White.toArgb() // Convertir a Int
+        val black = androidx.compose.ui.graphics.Color.Black.toArgb() // Color negro en formato Int
+        val white = androidx.compose.ui.graphics.Color.White.toArgb() // Color blanco en formato Int
         for (x in 0 until width) {
             for (y in 0 until height) {
                 bitmap.setPixel(x, y, if (bitMatrix[x, y]) black else white)
@@ -310,6 +380,13 @@ fun generateQrCodeBitmap(content: String): Bitmap? {
         null
     }
 }
+
+/**
+ * Elimina un código QR previamente guardado en el servidor remoto utilizando su ID.
+ *
+ * @param context El contexto de la aplicación.
+ * @param id El identificador único del código QR a eliminar.
+ */
 fun deleteQrCode(context: Context, id: Long) {
     val qrApi = RetrofitInstance.api
 
@@ -332,4 +409,3 @@ fun deleteQrCode(context: Context, id: Long) {
         }
     }
 }
-
