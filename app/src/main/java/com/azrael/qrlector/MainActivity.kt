@@ -39,6 +39,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.asImageBitmap
 import com.azrael.qrlector.network.QrCode
 import com.azrael.qrlector.network.RetrofitInstance
@@ -79,229 +80,249 @@ class MainActivity : AppCompatActivity() {
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp() {
-    // Contexto de la aplicación
-    val context = LocalContext.current
+    MaterialTheme(
+        colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme(),
+        typography = MaterialTheme.typography
+    ) {
 
-    // Estado para gestionar el permiso de cámara
-    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
-    // Estado que almacena el contenido del código QR escaneado
-    var qrCode by remember { mutableStateOf("") }
+        // Contexto de la aplicación
+        val context = LocalContext.current
 
-    // Estado que almacena el bitmap generado a partir del contenido del código QR
-    var qrBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
-    // Estados para controlar la visibilidad de diálogos y alertas
-    var showDialog by remember { mutableStateOf(false) }
-    var showAlert by remember { mutableStateOf(false) }
+        // Estado para gestionar el permiso de cámara
+        val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
-    // Lista de códigos QR previamente escaneados
-    var qrCodes by remember { mutableStateOf<List<QrCode>>(emptyList()) }
+        // Estado que almacena el contenido del código QR escaneado
+        var qrCode by remember { mutableStateOf("") }
 
-    // Estados para la confirmación de eliminación y para almacenar el código QR a eliminar
-    var showDeleteConfirmation by remember { mutableStateOf(false) }
-    var qrCodeToDelete by remember { mutableStateOf<QrCode?>(null) }
+        // Estado que almacena el bitmap generado a partir del contenido del código QR
+        var qrBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
-    // Estado para ejecutar acciones (fuera del bloque composable)
-    var executeAction by remember { mutableStateOf(false) }
+        // Estados para controlar la visibilidad de diálogos y alertas
+        var showDialog by remember { mutableStateOf(false) }
+        var showAlert by remember { mutableStateOf(false) }
 
-    // Lanzador para iniciar el escaneo del código QR mediante [ScanContract]
-    val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
-        if (result.contents != null) {
-            qrCode = result.contents
-            saveQrCode(context, qrCode)
-            qrBitmap = generateQrCodeBitmap(qrCode)
-        }
-    }
+        // Lista de códigos QR previamente escaneados
+        var qrCodes by remember { mutableStateOf<List<QrCode>>(emptyList()) }
 
-    /**
-     * Función local para actualizar un código QR en la lista de códigos almacenados.
-     *
-     * @param qrCode El código QR actualizado.
-     */
-    fun updateQrCodeLocal(qrCode: QrCode) {
-        qrCodes = qrCodes.map {
-            if (it.id == qrCode.id) {
-                qrCode
-            } else {
-                it
+        // Estados para la confirmación de eliminación y para almacenar el código QR a eliminar
+        var showDeleteConfirmation by remember { mutableStateOf(false) }
+        var qrCodeToDelete by remember { mutableStateOf<QrCode?>(null) }
+
+        // Estado para ejecutar acciones (fuera del bloque composable)
+        var executeAction by remember { mutableStateOf(false) }
+
+        // Lanzador para iniciar el escaneo del código QR mediante [ScanContract]
+        val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
+            if (result.contents != null) {
+                qrCode = result.contents
+                saveQrCode(context, qrCode)
+                qrBitmap = generateQrCodeBitmap(qrCode)
             }
         }
-    }
 
-    // Estructura principal de la UI utilizando Scaffold
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.qr_scanner_app), style = MaterialTheme.typography.titleLarge) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+        /**
+         * Función local para actualizar un código QR en la lista de códigos almacenados.
+         *
+         * @param qrCode El código QR actualizado.
+         */
+        fun updateQrCodeLocal(qrCode: QrCode) {
+            qrCodes = qrCodes.map {
+                if (it.id == qrCode.id) {
+                    qrCode
+                } else {
+                    it
+                }
+            }
+        }
+
+        // Estructura principal de la UI utilizando Scaffold
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            stringResource(R.string.qr_scanner_app),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
-            )
-        },
-        content = { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Muestra el bitmap del código QR, si ha sido generado
-                qrBitmap?.let {
-                    Box(
-                        modifier = Modifier
-                            .size(300.dp)
-                            .shadow(8.dp, RoundedCornerShape(16.dp))
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(
-                                Brush.linearGradient(
-                                    listOf(
-                                        MaterialTheme.colorScheme.primary,
-                                        MaterialTheme.colorScheme.secondary
+            },
+            content = { innerPadding ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(16.dp)
+                        .background(MaterialTheme.colorScheme.surface),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Muestra el bitmap del código QR, si ha sido generado
+                    qrBitmap?.let {
+                        Box(
+                            modifier = Modifier
+                                .size(300.dp)
+                                .shadow(8.dp, RoundedCornerShape(16.dp))
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(
+                                    Brush.linearGradient(
+                                        listOf(
+                                            MaterialTheme.colorScheme.primary,
+                                            MaterialTheme.colorScheme.secondary
+                                        )
                                     )
                                 )
+                                .clickable { showAlert = true }
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = stringResource(R.string.qr_code),
+                                modifier = Modifier.size(250.dp)
                             )
-                            .clickable { showAlert = true }
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            bitmap = it.asImageBitmap(),
-                            contentDescription = stringResource(R.string.qr_code),
-                            modifier = Modifier.size(250.dp)
+                        }
+                        // Muestra el contenido del código QR en forma de texto
+                        Text(
+                            text = qrCode,
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.padding(top = 16.dp)
                         )
                     }
-                    // Muestra el contenido del código QR en forma de texto
-                    Text(
-                        text = qrCode,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                // Si el permiso de cámara está concedido, se muestra el botón para escanear el código QR
-                if (cameraPermissionState.status.isGranted) {
-                    Button(
-                        onClick = { scanLauncher.launch(ScanOptions()) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .shadow(4.dp, RoundedCornerShape(8.dp))
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.primary)
-                    ) {
-                        Text(stringResource(R.string.scan_qr_code), fontSize = 18.sp)
-                    }
-                } else {
-                    // Si no se tiene permiso de cámara, se muestra un mensaje y un botón para solicitarlo
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(stringResource(R.string.permiso_de_camara_es_requerido_para_escanear_qr_codes), fontSize = 16.sp)
-                        Spacer(modifier = Modifier.height(8.dp))
+                    // Si el permiso de cámara está concedido, se muestra el botón para escanear el código QR
+                    if (cameraPermissionState.status.isGranted) {
                         Button(
-                            onClick = { cameraPermissionState.launchPermissionRequest() },
+                            onClick = { scanLauncher.launch(ScanOptions()) },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.secondary,
-                                contentColor = MaterialTheme.colorScheme.onSecondary
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
                             ),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp)
                                 .shadow(4.dp, RoundedCornerShape(8.dp))
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(MaterialTheme.colorScheme.secondary)
+                                .background(MaterialTheme.colorScheme.primary)
                         ) {
-                            Text(stringResource(R.string.request_permission), fontSize = 16.sp)
+                            Text(stringResource(R.string.scan_qr_code), fontSize = 18.sp)
                         }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                // Botón para mostrar los códigos QR escaneados anteriormente
-                Button(
-                    onClick = { showDialog = true },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .shadow(4.dp, RoundedCornerShape(8.dp))
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.primaryContainer)
-                ) {
-                    Text(stringResource(R.string.qr_escaneados_anteriores), fontSize = 18.sp)
-                }
-
-                // Diálogo que muestra la lista de códigos QR escaneados anteriormente
-                if (showDialog) {
-                    AlertDialog(
-                        onDismissRequest = { showDialog = false },
-                        title = { Text(stringResource(R.string.qr_escaneados_anteriores)) },
-                        text = {
-                            QrCodeList(
-                                onDismiss = { showDialog = false },
-                                onDelete = { qrCode ->
-                                    qrCodeToDelete = qrCode
-                                    showDeleteConfirmation = true
-                                },
-                                onEdit = { qrCode ->
-                                    updateQrCodeLocal(qrCode)
-                                }
+                    } else {
+                        // Si no se tiene permiso de cámara, se muestra un mensaje y un botón para solicitarlo
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                stringResource(R.string.permiso_de_camara_es_requerido_para_escanear_qr_codes),
+                                fontSize = 16.sp
                             )
-                        },
-                        confirmButton = {
-                            Button(onClick = { showDialog = false }) {
-                                Text(stringResource(R.string.cerrar))
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Button(
+                                onClick = { cameraPermissionState.launchPermissionRequest() },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.secondary,
+                                    contentColor = MaterialTheme.colorScheme.onSecondary
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp)
+                                    .shadow(4.dp, RoundedCornerShape(8.dp))
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(MaterialTheme.colorScheme.secondary)
+                            ) {
+                                Text(stringResource(R.string.request_permission), fontSize = 16.sp)
                             }
                         }
-                    )
-                }
+                    }
 
-                // Diálogo de confirmación para eliminar un código QR
-                if (showDeleteConfirmation) {
-                    DeleteConfirmationDialog(
-                        qrCode = qrCodeToDelete!!,
-                        onConfirm = {
-                            qrCodeToDelete!!.id?.let { deleteQrCode(context, it) }
-                            showDeleteConfirmation = false
-                        },
-                        onDismiss = { showDeleteConfirmation = false }
-                    )
-                }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    // Botón para mostrar los códigos QR escaneados anteriormente
+                    Button(
+                        onClick = { showDialog = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .shadow(4.dp, RoundedCornerShape(8.dp))
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.primaryContainer)
+                    ) {
+                        Text(stringResource(R.string.qr_escaneados_anteriores), fontSize = 18.sp)
+                    }
 
-                // Diálogo para confirmar la acción al pulsar sobre el código QR mostrado
-                if (showAlert) {
-                    ConfirmActionDialog(
-                        title = stringResource(R.string.confirmar_acci_n),
-                        message = stringResource(R.string.quieres, stringResource(R.string.abrir_enlace)),
-                        onConfirm = {
-                            executeAction = true  // Se activa el estado para ejecutar la acción
-                            showAlert = false
-                        },
-                        onDismiss = { showAlert = false }
-                    )
-                }
+                    // Diálogo que muestra la lista de códigos QR escaneados anteriormente
+                    if (showDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showDialog = false },
+                            title = { Text(stringResource(R.string.qr_escaneados_anteriores)) },
+                            text = {
+                                QrCodeList(
+                                    onDismiss = { showDialog = false },
+                                    onDelete = { qrCode ->
+                                        qrCodeToDelete = qrCode
+                                        showDeleteConfirmation = true
+                                    },
+                                    onEdit = { qrCode ->
+                                        updateQrCodeLocal(qrCode)
+                                    }
+                                )
+                            },
+                            confirmButton = {
+                                Button(onClick = { showDialog = false }) {
+                                    Text(stringResource(R.string.cerrar))
+                                }
+                            }
+                        )
+                    }
 
-                // Si se confirma la acción, se ejecuta la acción correspondiente fuera del bloque composable
-                if (executeAction) {
-                    handleQrCodeAction(context, qrCode)
-                    executeAction = false
+                    // Diálogo de confirmación para eliminar un código QR
+                    if (showDeleteConfirmation) {
+                        DeleteConfirmationDialog(
+                            qrCode = qrCodeToDelete!!,
+                            onConfirm = {
+                                qrCodeToDelete!!.id?.let { deleteQrCode(context, it) }
+                                showDeleteConfirmation = false
+                            },
+                            onDismiss = { showDeleteConfirmation = false }
+                        )
+                    }
+
+                    // Diálogo para confirmar la acción al pulsar sobre el código QR mostrado
+                    if (showAlert) {
+                        ConfirmActionDialog(
+                            title = stringResource(R.string.confirmar_acci_n),
+                            message = stringResource(
+                                R.string.quieres,
+                                stringResource(R.string.abrir_enlace)
+                            ),
+                            onConfirm = {
+                                executeAction = true  // Se activa el estado para ejecutar la acción
+                                showAlert = false
+                            },
+                            onDismiss = { showAlert = false }
+                        )
+                    }
+
+                    // Si se confirma la acción, se ejecuta la acción correspondiente fuera del bloque composable
+                    if (executeAction) {
+                        handleQrCodeAction(context, qrCode)
+                        executeAction = false
+                    }
                 }
             }
-        }
-    )
+        )
+    }
 }
 
 /**
