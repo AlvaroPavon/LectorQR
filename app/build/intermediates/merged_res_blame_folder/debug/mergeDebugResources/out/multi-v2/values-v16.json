@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.azrael.qrlector.app-mergeDebugResources-58:/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Alvaro\\.gradle\\caches\\8.10.2\\transforms\\1214333a4bc96415fa225679fc547a7e\\transformed\\appcompat-1.7.0\\res\\values-v16\\values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "223"
+                    }
+                }
+            ]
+        }
+    ]
+}

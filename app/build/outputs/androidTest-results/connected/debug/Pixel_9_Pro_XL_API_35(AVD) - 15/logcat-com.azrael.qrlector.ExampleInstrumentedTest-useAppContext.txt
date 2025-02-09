@@ -1,0 +1,2 @@
+02-09 14:10:43.210  8586  8601 I TestRunner: started: useAppContext(com.azrael.qrlector.ExampleInstrumentedTest)
+02-09 14:10:43.217  8586  8601 I TestRunner: finished: useAppContext(com.azrael.qrlector.ExampleInstrumentedTest)

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorError">#B00020</color>
+    <color name="colorOnBackground">#000000</color>
+    <color name="colorOnError">#FFFFFF</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnSecondary">#000000</color>
+    <color name="colorOnSurface">#000000</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryVariant">#3700B3</color>
+    <color name="colorSecondary">#03DAC6</color>
+    <color name="colorSecondaryVariant">#018786</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <string name="abrir_enlace">Abrir enlace</string>
+    <string name="app_name">QrLector</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="cerrar">Cerrar</string>
+    <string name="confirmar_acci_n">Confirmar Acción</string>
+    <string name="confirmar_eliminaci_n">Confirmar Eliminación</string>
+    <string name="contenido">Contenido: %1$s</string>
+    <string name="contenido_del_qr">Contenido del QR</string>
+    <string name="copiar_texto">Copiar texto</string>
+    <string name="descripci_n">Descripción: %1$s</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="error_al_actualizar_qr_code">Error al actualizar QR Code: %1$s</string>
+    <string name="error_al_eliminar_qr_code">Error al eliminar QR Code: %1$s</string>
+    <string name="error_al_guardar_qr_code">Error al guardar QR Code: %1$s</string>
+    <string name="error_al_obtener_qr_codes">Error al obtener QR Codes: %1$s</string>
+    <string name="est_s_seguro_de_que_quieres_eliminar_este_qr_code">¿Estás seguro de que quieres eliminar este QR Code?</string>
+    <string name="guardar">Guardar</string>
+    <string name="modificar">Modificar</string>
+    <string name="modificar_qr_code">Modificar QR Code</string>
+    <string name="no">No</string>
+    <string name="permiso_de_camara_es_requerido_para_escanear_qr_codes">Permiso de camara es requerido para escanear QR Codes.</string>
+    <string name="qr_code">QR Code</string>
+    <string name="qr_code_actualizado_exitosamente">QR Code actualizado exitosamente: %1$s</string>
+    <string name="qr_code_eliminado_exitosamente">QR Code eliminado exitosamente</string>
+    <string name="qr_code_escaneado">QR Code escaneado</string>
+    <string name="qr_code_guardado_exitosamente">QR Code guardado exitosamente: %1$s</string>
+    <string name="qr_escaneados_anteriores">QR Escaneados Anteriores</string>
+    <string name="qr_modificado_ltima_modificaci_n">QR modificado (Última modificación: %1$s)</string>
+    <string name="qr_scanner_app">QR Scanner App</string>
+    <string name="quieres">¿Quieres %1$s?</string>
+    <string name="quieres_abrir_el_enlace_o_copiar_el_texto">¿Quieres abrir el enlace o copiar el texto?</string>
+    <string name="request_permission">Request Permission</string>
+    <string name="s">Sí</string>
+    <string name="scan_qr_code">Escanear QR Code</string>
+    <string name="texto_copiado_al_portapapeles">Texto copiado al portapapeles: %1$s</string>
+    <string name="ver_qr_escaneados_anteriores">Ver QR Escaneados Anteriores</string>
+    <string name="yyyy_mm_dd_hh_mm_ss">yyyy-MM-dd HH:mm:ss</string>
+    <style name="Theme.QrLector" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        
+        <item name="android:colorBackground">@color/colorBackground</item>
+        
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+        
+        <item name="colorError">@color/colorError</item>
+        <item name="colorOnError">@color/colorOnError</item>
+        
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        
+    </style>
+</resources>

@@ -1,0 +1,207 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.azrael.qrlector"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="35" />
+10
+11    <uses-feature
+11-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:5:5-7:36
+12        android:name="android.hardware.camera"
+12-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:6:9-47
+13        android:required="false" />
+13-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:7:9-33
+14
+15    <uses-permission android:name="android.permission.CAMERA" />
+15-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:8:5-65
+15-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:8:22-62
+16    <uses-permission android:name="android.permission.INTERNET" />
+16-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:9:5-67
+16-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:9:22-64
+17
+18    <permission
+18-->[androidx.core:core:1.15.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\acc4d4749d7d44d1f312c49ad7830147\transformed\core-1.15.0\AndroidManifest.xml:22:5-24:47
+19        android:name="com.azrael.qrlector.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+19-->[androidx.core:core:1.15.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\acc4d4749d7d44d1f312c49ad7830147\transformed\core-1.15.0\AndroidManifest.xml:23:9-81
+20        android:protectionLevel="signature" />
+20-->[androidx.core:core:1.15.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\acc4d4749d7d44d1f312c49ad7830147\transformed\core-1.15.0\AndroidManifest.xml:24:9-44
+21
+22    <uses-permission android:name="com.azrael.qrlector.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+22-->[androidx.core:core:1.15.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\acc4d4749d7d44d1f312c49ad7830147\transformed\core-1.15.0\AndroidManifest.xml:26:5-97
+22-->[androidx.core:core:1.15.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\acc4d4749d7d44d1f312c49ad7830147\transformed\core-1.15.0\AndroidManifest.xml:26:22-94
+23
+24    <uses-feature
+24-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:28:5-30:36
+25        android:name="android.hardware.camera.front"
+25-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:29:9-53
+26        android:required="false" /> <!-- TODO replace above two with next line after Android 4.2 -->
+26-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:30:9-33
+27    <!-- <uses-feature android:name="android.hardware.camera.any"/> -->
+28    <uses-feature
+28-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:33:5-35:36
+29        android:name="android.hardware.camera.autofocus"
+29-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:34:9-57
+30        android:required="false" />
+30-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:35:9-33
+31    <uses-feature
+31-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:36:5-38:36
+32        android:name="android.hardware.camera.flash"
+32-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:37:9-53
+33        android:required="false" />
+33-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:38:9-33
+34    <uses-feature
+34-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:39:5-41:36
+35        android:name="android.hardware.screen.landscape"
+35-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:40:9-57
+36        android:required="false" />
+36-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:41:9-33
+37    <uses-feature
+37-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:42:5-44:36
+38        android:name="android.hardware.wifi"
+38-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:43:9-45
+39        android:required="false" />
+39-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:44:9-33
+40
+41    <application
+41-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:11:5-31:19
+42        android:allowBackup="true"
+42-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:12:9-35
+43        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+43-->[androidx.core:core:1.15.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\acc4d4749d7d44d1f312c49ad7830147\transformed\core-1.15.0\AndroidManifest.xml:28:18-86
+44        android:dataExtractionRules="@xml/data_extraction_rules"
+44-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:13:9-65
+45        android:debuggable="true"
+46        android:extractNativeLibs="false"
+47        android:fullBackupContent="@xml/backup_rules"
+47-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:14:9-54
+48        android:icon="@drawable/logo"
+48-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:15:9-38
+49        android:label="@string/app_name"
+49-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:16:9-41
+50        android:roundIcon="@drawable/logo"
+50-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:17:9-43
+51        android:supportsRtl="true"
+51-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:18:9-35
+52        android:testOnly="true"
+53        android:theme="@style/Theme.QrLector" >
+53-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:19:9-46
+54        <activity
+54-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:21:9-30:20
+55            android:name="com.azrael.qrlector.MainActivity"
+55-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:22:13-41
+56            android:exported="true"
+56-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:23:13-36
+57            android:label="@string/app_name"
+57-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:24:13-45
+58            android:theme="@style/Theme.QrLector" >
+58-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:25:13-50
+59            <intent-filter>
+59-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:26:13-29:29
+60                <action android:name="android.intent.action.MAIN" />
+60-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:27:17-69
+60-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:27:25-66
+61
+62                <category android:name="android.intent.category.LAUNCHER" />
+62-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:28:17-77
+62-->C:\Users\Alvaro\Desktop\Odoo\addons\LectorQR\app\src\main\AndroidManifest.xml:28:27-74
+63            </intent-filter>
+64        </activity>
+65        <activity
+65-->[androidx.compose.ui:ui-tooling-android:1.6.6] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\fb60e410ffe45067344c4981e2d5ccf3\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
+66            android:name="androidx.compose.ui.tooling.PreviewActivity"
+66-->[androidx.compose.ui:ui-tooling-android:1.6.6] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\fb60e410ffe45067344c4981e2d5ccf3\transformed\ui-tooling-release\AndroidManifest.xml:24:13-71
+67            android:exported="true" />
+67-->[androidx.compose.ui:ui-tooling-android:1.6.6] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\fb60e410ffe45067344c4981e2d5ccf3\transformed\ui-tooling-release\AndroidManifest.xml:25:13-36
+68        <activity
+68-->[androidx.compose.ui:ui-test-manifest:1.6.6] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\40873fd19d86d89bf4b820bfcc40f720\transformed\ui-test-manifest-1.6.6\AndroidManifest.xml:23:9-25:39
+69            android:name="androidx.activity.ComponentActivity"
+69-->[androidx.compose.ui:ui-test-manifest:1.6.6] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\40873fd19d86d89bf4b820bfcc40f720\transformed\ui-test-manifest-1.6.6\AndroidManifest.xml:24:13-63
+70            android:exported="true" />
+70-->[androidx.compose.ui:ui-test-manifest:1.6.6] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\40873fd19d86d89bf4b820bfcc40f720\transformed\ui-test-manifest-1.6.6\AndroidManifest.xml:25:13-36
+71
+72        <provider
+72-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\64fe661caa7768981104f3e5d1b59677\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+73            android:name="androidx.startup.InitializationProvider"
+73-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\64fe661caa7768981104f3e5d1b59677\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+74            android:authorities="com.azrael.qrlector.androidx-startup"
+74-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\64fe661caa7768981104f3e5d1b59677\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+75            android:exported="false" >
+75-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\64fe661caa7768981104f3e5d1b59677\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+76            <meta-data
+76-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\64fe661caa7768981104f3e5d1b59677\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+77                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+77-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\64fe661caa7768981104f3e5d1b59677\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+78                android:value="androidx.startup" />
+78-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\64fe661caa7768981104f3e5d1b59677\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+79            <meta-data
+79-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\f2cd46b659f301b7a00ab9da638ed767\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:29:13-31:52
+80                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+80-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\f2cd46b659f301b7a00ab9da638ed767\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:30:17-78
+81                android:value="androidx.startup" />
+81-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\f2cd46b659f301b7a00ab9da638ed767\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:31:17-49
+82            <meta-data
+82-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
+83                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+83-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
+84                android:value="androidx.startup" />
+84-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
+85        </provider>
+86
+87        <receiver
+87-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
+88            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+88-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
+89            android:directBootAware="false"
+89-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
+90            android:enabled="true"
+90-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
+91            android:exported="true"
+91-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
+92            android:permission="android.permission.DUMP" >
+92-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
+93            <intent-filter>
+93-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
+94                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+94-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
+94-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
+95            </intent-filter>
+96            <intent-filter>
+96-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
+97                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+97-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
+97-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
+98            </intent-filter>
+99            <intent-filter>
+99-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
+100                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+100-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
+100-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
+101            </intent-filter>
+102            <intent-filter>
+102-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
+103                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+103-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
+103-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\8fd3478994cf475ea41fbf968b939f13\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
+104            </intent-filter>
+105        </receiver>
+106
+107        <activity
+107-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:47:9-53:63
+108            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+108-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:48:13-74
+109            android:clearTaskOnLaunch="true"
+109-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:49:13-45
+110            android:screenOrientation="sensorLandscape"
+110-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:50:13-56
+111            android:stateNotNeeded="true"
+111-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:51:13-42
+112            android:theme="@style/zxing_CaptureTheme"
+112-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:52:13-54
+113            android:windowSoftInputMode="stateAlwaysHidden" />
+113-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\Alvaro\.gradle\caches\8.10.2\transforms\026454adbc1e284825e36013554fd527\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:53:13-60
+114    </application>
+115
+116</manifest>
